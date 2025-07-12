@@ -157,7 +157,7 @@ def predict_proximity(model, metrics, snr):
         return pred, None
 ```
 
-See the full code in [codev0_ml.py](./codev0_ml.py).
+See the full code in an upcoming version on github.
 
 ---
 
