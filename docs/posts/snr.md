@@ -18,20 +18,6 @@ Welcome to the blog for the **Wi-Fi Proximity Sensor** project, where we transfo
 
 ---
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Motivation & Applications](#motivation--applications)
-- [How It Works](#how-it-works)
-- [Adding Machine Learning](#adding-machine-learning)
-- [Step-by-Step Guide](#step-by-step-guide)
-- [Sample Code](#sample-code)
-- [Results & Improvements](#results--improvements)
-- [Next Steps](#next-steps)
-- [References](#references)
-
----
-
 ## Overview
 
 This project uses a standard Wi-Fi adaptor as a proximity sensor by monitoring wireless signal strength, noise levels, and Signal-to-Noise Ratio (SNR). The sensor estimates how close or far objects are by analyzing how wireless metrics change over time.
