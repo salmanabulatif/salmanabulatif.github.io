@@ -1,0 +1,29 @@
+site_name: Salman Abulatif
+site_description: Posting my findings ~salmanabulatif
+site_url: https://sitename.example
+theme:
+  name: material
+  palette:
+    # Dark Mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark mode
+      primary: deep orange
+      accent: deep purple
+
+    # Light Mode
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light mode
+      primary: blue
+      accent: deep orange
+plugins:
+  - search
+  - blog:
+      blog_dir: .
+extra:
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/salmanabulatif/
