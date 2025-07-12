@@ -21,7 +21,7 @@ Welcome to the blog for the **Wi-Fi Proximity Sensor** project, where we transfo
 ## Table of Contents
 
 - [Overview](#overview)
-- [Motivation & Applications](#motivation--applications)
+- [Motivation & Applications](#motivation-applications)
 - [How It Works](#how-it-works)
 - [Adding Machine Learning](#adding-machine-learning)
 - [Step-by-Step Guide](#step-by-step-guide)
