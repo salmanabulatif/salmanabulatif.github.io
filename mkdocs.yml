@@ -27,3 +27,6 @@ extra:
   social:
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/salmanabulatif/
+markdown_extensions:
+  - pymdownx.arithmatex
+  - pymdownx.superfences
