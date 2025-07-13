@@ -445,94 +445,89 @@
 <h2 id="network-architecture">Network Architecture</h2>
 <p>We consider a neural network with:</p>
 <ul>
-<li><strong>Input layer:</strong> 3 neurons (<code>x₁</code>, <code>x₂</code>, <code>x₃</code>)</li>
-<li><strong>Hidden layer:</strong> 2 neurons (<code>h₄</code>, <code>h₅</code>)</li>
-<li><strong>Output layer:</strong> 1 neuron (<code>o₆</code>)</li>
+<li><strong>Input layer:</strong> 3 neurons (x₁, x₂, x₃)</li>
+<li><strong>Hidden layer:</strong> 2 neurons (h₄, h₅)</li>
+<li><strong>Output layer:</strong> 1 neuron (o₆)</li>
 </ul>
 <div class="highlight"><pre><span></span><code>Input Layer (x₁, x₂, x₃) → Hidden Layer (h₄, h₅) → Output Layer (o₆)
 </code></pre></div>
 <p><img alt="image3" src="image3" /></p>
 <hr />
 <h2 id="1-forward-pass">1. Forward Pass</h2>
-<p>The forward pass computes the output of each neuron layer-by-layer using weights (<code>ω</code>), biases (<code>b</code>), and activation functions (sigmoid here).</p>
+<p>The forward pass computes the output of each neuron layer-by-layer using weights (ω), biases (b), and activation functions (sigmoid here).</p>
 <h3 id="hidden-layer-calculations">Hidden Layer Calculations</h3>
-<p>For neuron 4 (<code>h₄</code>):</p>
-<div class="highlight"><pre><span></span><code>a_4 = \sigma(\text{inputs} \cdot \text{weights} + b_4)
+<p>For neuron 4 (h₄):</p>
+<div class="highlight"><pre><span></span><code>a4 = sigmoid(inputs * weights + b4)
 </code></pre></div>
 <p>From the notes:</p>
-<div class="highlight"><pre><span></span><code>a_4 = \frac{1}{1 + e^{-(-0.7)}} = 0.332
+<div class="highlight"><pre><span></span><code>a4 = 1 / (1 + exp(-(-0.7))) = 0.332
 </code></pre></div>
-<p>For neuron 5 (<code>h₅</code>):</p>
-<div class="highlight"><pre><span></span><code>a_5 = \frac{1}{1 + e^{-0.1}} = 0.325
+<p>For neuron 5 (h₅):</p>
+<div class="highlight"><pre><span></span><code>a5 = 1 / (1 + exp(-0.1)) = 0.325
 </code></pre></div>
 <h3 id="output-layer-calculation">Output Layer Calculation</h3>
-<div class="highlight"><pre><span></span><code>o_6 = \sigma(a_4 \omega_{46} + a_5 \omega_{56} + b_6)
+<div class="highlight"><pre><span></span><code>o6 = sigmoid(a4 * ω46 + a5 * ω56 + b6)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>a_6 = \frac{1}{1 + e^{-(-0.206)}} = 0.194
+<div class="highlight"><pre><span></span><code>a6 = 1 / (1 + exp(-(-0.206))) = 0.194
 </code></pre></div>
 <p><img alt="image2" src="image2" /></p>
 <hr />
 <h2 id="2-loss-calculation">2. Loss Calculation</h2>
-<p>The error (loss) is computed between the prediction (<code>o₆</code>) and the target value.</p>
+<p>The error (loss) is computed between the prediction (o₆) and the target value.</p>
 <p>From the notes (target = 1):</p>
-<div class="highlight"><pre><span></span><code>\text{Error} = 1 - 0.414 = 0.526
+<div class="highlight"><pre><span></span><code>Error = 1 - 0.414 = 0.526
 </code></pre></div>
 <hr />
 <h2 id="3-backward-propagation">3. Backward Propagation</h2>
 <p>Backward propagation applies the chain rule to compute gradients for each weight and bias.</p>
-<h3 id="output-neuron-gradient-delta_6delta_6">Output Neuron Gradient (<span class="arithmatex"><span class="MathJax_Preview">\delta_6</span><script type="math/tex">\delta_6</script></span>)</h3>
-<div class="highlight"><pre><span></span><code>\delta_6 = \text{Error} \times \sigma&#39;(o_6)
+<h3 id="output-neuron-gradient-6">Output Neuron Gradient (δ₆)</h3>
+<div class="highlight"><pre><span></span><code>δ6 = Error × sigmoid&#39;(o6)
 </code></pre></div>
 <p>where</p>
-<div class="highlight"><pre><span></span><code>\sigma&#39;(z) = \sigma(z)(1 - \sigma(z))
+<div class="highlight"><pre><span></span><code>sigmoid&#39;(z) = sigmoid(z) * (1 - sigmoid(z))
 </code></pre></div>
 <p>From the notes:</p>
-<div class="highlight"><pre><span></span><code>\delta_6 = 0.414 \times (1 - 0.414) \times (1 - 0.414) = 0.131
+<div class="highlight"><pre><span></span><code>δ6 = 0.414 × (1 - 0.414) × (1 - 0.414) = 0.131
 </code></pre></div>
 <h3 id="hidden-neuron-gradients">Hidden Neuron Gradients</h3>
-<p>For neuron 5 (<span class="arithmatex"><span class="MathJax_Preview">\delta_5</span><script type="math/tex">\delta_5</script></span>):</p>
-<div class="highlight"><pre><span></span><code>\delta_5 = a_5(1 - a_5) \times (\delta_6 \cdot \omega_{56})
+<p>For neuron 5 (δ₅):</p>
+<div class="highlight"><pre><span></span><code>δ5 = a5 * (1 - a5) × (δ6 * ω56)
+δ5 = 0.325 × (1 - 0.525) × (0.2 × 0.131) = 0.095
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>\delta_5 = 0.325 \times (1 - 0.525) \times (0.2 \times 0.131) = 0.095
-</code></pre></div>
-<p>For neuron 4 (<span class="arithmatex"><span class="MathJax_Preview">\delta_4</span><script type="math/tex">\delta_4</script></span>):</p>
-<div class="highlight"><pre><span></span><code>\delta_4 = a_4(1 - a_4) \times (\delta_6 \cdot \omega_{46})
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>\delta_4 = 0.332 \times (1 - 0.332) \times (0.2 \times 0.131) = 0.095
+<p>For neuron 4 (δ₄):</p>
+<div class="highlight"><pre><span></span><code>δ4 = a4 * (1 - a4) × (δ6 * ω46)
+δ4 = 0.332 × (1 - 0.332) × (0.2 × 0.131) = 0.095
 </code></pre></div>
 <p><img alt="image1" src="image1" /></p>
 <hr />
 <h2 id="4-weight-updates">4. Weight Updates</h2>
-<p>Weights are updated using the computed gradients and a learning rate (<span class="arithmatex"><span class="MathJax_Preview">\eta=0.9</span><script type="math/tex">\eta=0.9</script></span>).</p>
+<p>Weights are updated using the computed gradients and a learning rate (η=0.9).</p>
 <p><strong>Update Rule:</strong></p>
-<div class="highlight"><pre><span></span><code>\Delta \omega_{ij} = \eta \times \delta_i \times a_j
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>\omega_{ij}^{\text{new}} = \omega_{ij}^{\text{old}} + \Delta \omega_{ij}
+<div class="highlight"><pre><span></span><code>Δωij = η × δi × aj
+ωij_new = ωij_old + Δωij
 </code></pre></div>
 <p><strong>Example Updates (see notes):</strong></p>
 <ul>
 <li>
-<p><strong>Weight <span class="arithmatex"><span class="MathJax_Preview">\omega_{16}</span><script type="math/tex">\omega_{16}</script></span> (input 1 → output 6):</strong></p>
-<div class="highlight"><pre><span></span><code>\Delta \omega_{16} = 0.9 \times 0.131 \times 0.392 = 0.046
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>\omega_{16}^{\text{new}} = 0.939 - 0.3 = 0.639
+<p>Weight ω16 (input 1 → output 6):</p>
+<div class="highlight"><pre><span></span><code>Δω16 = 0.9 × 0.131 × 0.392 = 0.046
+ω16_new = 0.939 - 0.3 = 0.639
 </code></pre></div>
 </li>
 <li>
-<p><strong>Weight <span class="arithmatex"><span class="MathJax_Preview">\omega_{35}</span><script type="math/tex">\omega_{35}</script></span> (input 3 → hidden 5):</strong></p>
-<div class="highlight"><pre><span></span><code>\Delta \omega_{35} = 0.9 \times 0.00653 \times 1 = 0.00588
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>\omega_{35}^{\text{new}} = 0.2 - 0.00857 = 0.19143
+<p>Weight ω35 (input 3 → hidden 5):</p>
+<div class="highlight"><pre><span></span><code>Δω35 = 0.9 × 0.00653 × 1 = 0.00588
+ω35_new = 0.2 - 0.00857 = 0.19143
 </code></pre></div>
 </li>
 </ul>
 <hr />
 <h2 id="5-bias-updates">5. Bias Updates</h2>
 <p>Biases are updated similarly:</p>
-<div class="highlight"><pre><span></span><code>b_i^{\text{new}} = b_i^{\text{old}} + \eta \times \delta_i
+<div class="highlight"><pre><span></span><code>bi_new = bi_old + η × δi
 </code></pre></div>
 <p>For output neuron 6:</p>
-<div class="highlight"><pre><span></span><code>b_6^{\text{new}} = 0.1 + (0.9 \times 0.131) = 0.218
+<div class="highlight"><pre><span></span><code>b6_new = 0.1 + (0.9 × 0.131) = 0.218
 </code></pre></div>
 <p><img alt="image4" src="image4" /></p>
 <hr />
@@ -547,27 +542,27 @@
 <tbody>
 <tr>
 <td>Forward Pass</td>
-<td><span style="font-family:monospace;"><span class="arithmatex"><span class="MathJax_Preview"> a_j = \sigma\left(\sum_i \omega_{ij} x_i + b_j\right) </span><script type="math/tex"> a_j = \sigma\left(\sum_i \omega_{ij} x_i + b_j\right) </script></span></span></td>
+<td>a_j = sigmoid(sum_over_i(ω_ij * x_i) + b_j)</td>
 </tr>
 <tr>
 <td>Sigmoid</td>
-<td><span style="font-family:monospace;"><span class="arithmatex"><span class="MathJax_Preview"> \sigma(z) = \dfrac{1}{1 + e^{-z}} </span><script type="math/tex"> \sigma(z) = \dfrac{1}{1 + e^{-z}} </script></span></span></td>
+<td>sigmoid(z) = 1 / (1 + exp(-z))</td>
 </tr>
 <tr>
 <td>Output Gradient</td>
-<td><span style="font-family:monospace;"><span class="arithmatex"><span class="MathJax_Preview"> \delta_k = (y - \hat{y}) \cdot \sigma'(o_k) </span><script type="math/tex"> \delta_k = (y - \hat{y}) \cdot \sigma'(o_k) </script></span></span></td>
+<td>δ_k = (y - y_hat) * sigmoid'(o_k)</td>
 </tr>
 <tr>
 <td>Hidden Gradient</td>
-<td><span style="font-family:monospace;"><span class="arithmatex"><span class="MathJax_Preview"> \delta_j = \sigma'(a_j) \sum_k (\delta_k \omega_{jk}) </span><script type="math/tex"> \delta_j = \sigma'(a_j) \sum_k (\delta_k \omega_{jk}) </script></span></span></td>
+<td>δ_j = sigmoid'(a_j) * sum_over_k(δ_k * ω_jk)</td>
 </tr>
 <tr>
 <td>Weight Update</td>
-<td><span style="font-family:monospace;"><span class="arithmatex"><span class="MathJax_Preview"> \Delta \omega_{ij} = \eta \cdot \delta_j \cdot a_i </span><script type="math/tex"> \Delta \omega_{ij} = \eta \cdot \delta_j \cdot a_i </script></span></span></td>
+<td>Δω_ij = η * δ_j * a_i</td>
 </tr>
 <tr>
 <td>Bias Update</td>
-<td><span style="font-family:monospace;"><span class="arithmatex"><span class="MathJax_Preview"> \Delta b_j = \eta \cdot \delta_j </span><script type="math/tex"> \Delta b_j = \eta \cdot \delta_j </script></span></span></td>
+<td>Δb_j = η * δ_j</td>
 </tr>
 </tbody>
 </table>
