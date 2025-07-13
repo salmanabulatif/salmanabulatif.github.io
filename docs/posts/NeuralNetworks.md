@@ -30,7 +30,7 @@ We consider a neural network with:
 Input Layer (x₁, x₂, x₃) → Hidden Layer (h₄, h₅) → Output Layer (o₆)
 ```
 
-![image3](image3.jpeg)
+
 
 ---
 
@@ -68,7 +68,7 @@ o6 = sigmoid(a4 * ω46 + a5 * ω56 + b6)
 a6 = 1 / (1 + exp(-(-0.206))) = 0.194
 ```
 
-![image2](image2.jpeg)
+
 
 ---
 
@@ -122,7 +122,7 @@ For neuron 4 (δ₄):
 δ4 = 0.332 × (1 - 0.332) × (0.2 × 0.131) = 0.095
 ```
 
-![image1](image1.jpeg)
+
 
 ---
 
@@ -169,7 +169,7 @@ For output neuron 6:
 b6_new = 0.1 + (0.9 × 0.131) = 0.218
 ```
 
-![image4](image4.jpeg)
+
 
 ---
 
@@ -200,10 +200,10 @@ Your files and these notes demonstrate a practical implementation of these princ
 
 *Handwritten notes and calculations for visual reference:*
 
-- Network diagram: ![image3](image3.jpeg)
-- Forward pass & error calculation: ![image2](image2.jpeg)
-- Backpropagation and weight update math: ![image1](image1.jpeg)
-- Bias update math: ![image4](image4.jpeg)
+- Network diagram: 
+- Forward pass & error calculation: 
+- Backpropagation and weight update math: 
+- Bias update math: 
 
 ---
 
