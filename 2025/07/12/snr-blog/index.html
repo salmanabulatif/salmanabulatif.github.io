@@ -479,14 +479,14 @@ It operates in <strong>four modes</strong>:</p>
 <li><strong><code>iwconfig</code>:</strong> Fallback for legacy setups, parsing signal/noise from text output.</li>
 </ul>
 <p><strong>SNR Calculation:</strong></p>
-<pre><code>SNR = Signal Strength (dBm) - Noise Level (dBm)
-</code></pre>
+<div class="highlight"><pre><span></span><code>SNR = Signal Strength (dBm) - Noise Level (dBm)
+</code></pre></div>
 <p>If noise is unavailable (common in some adapters), it approximates:</p>
-<pre><code>SNR ≈ Signal Strength + 90
-</code></pre>
+<div class="highlight"><pre><span></span><code>SNR ≈ Signal Strength + 90
+</code></pre></div>
 <p><strong>Signal Smoothing (EMA, α = 0.7):</strong></p>
-<pre><code>SNR_smoothed_t = α · SNR_smoothed_{t-1} + (1-α) · SNR_raw_t
-</code></pre>
+<div class="highlight"><pre><span></span><code>SNR_smoothed_t = α · SNR_smoothed_{t-1} + (1-α) · SNR_raw_t
+</code></pre></div>
 <p>This keeps readings stable for reliable proximity estimates during pentests.</p>
 <hr />
 <h3 id="machine-learning-pipeline">Machine Learning Pipeline</h3>
@@ -523,77 +523,77 @@ It operates in <strong>four modes</strong>:</p>
 <h2 id="core-code-preview">Core Code (Preview)</h2>
 <p>Here’s a stripped-down version of the core logic, focusing on metric extraction and monitoring.<br />
 The full code, with data collection and training, will be released soon.</p>
-<pre><code class="language-python">#!/usr/bin/env python3
-import subprocess
-import re
-import time
-import joblib
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
 
-INTERFACE = &quot;wlan0&quot;
-SAMPLING_RATE = 0.5
-SMOOTHING_FACTOR = 0.7
-MODEL_FILE = &quot;wifi_proximity_model.pkl&quot;
+<span class="n">INTERFACE</span> <span class="o">=</span> <span class="s2">&quot;wlan0&quot;</span>
+<span class="n">SAMPLING_RATE</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">SMOOTHING_FACTOR</span> <span class="o">=</span> <span class="mf">0.7</span>
+<span class="n">MODEL_FILE</span> <span class="o">=</span> <span class="s2">&quot;wifi_proximity_model.pkl&quot;</span>
 
-def get_wireless_metrics(interface):
-    metrics = {'signal': None, 'noise': None}
-    try:
-        output = subprocess.check_output([&quot;iw&quot;, &quot;dev&quot;, interface, &quot;link&quot;], text=True, stderr=subprocess.DEVNULL)
-        sig_match = re.search(r&quot;signal:\s*(-?\d+)\s*dBm&quot;, output)
-        if sig_match:
-            metrics['signal'] = int(sig_match.group(1))
-    except Exception:
-        try:
-            with open(&quot;/proc/net/wireless&quot;, &quot;r&quot;) as f:
-                for line in f.readlines()[2:]:
-                    if interface in line:
-                        parts = line.strip().split()
-                        if len(parts) &gt;= 5:
-                            metrics['signal'] = int(float(parts[3]))
-                            metrics['noise'] = int(float(parts[4]))
-                            break
-        except Exception:
-            pass
-    return metrics
+<span class="k">def</span><span class="w"> </span><span class="nf">get_wireless_metrics</span><span class="p">(</span><span class="n">interface</span><span class="p">):</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;signal&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;noise&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;iw&quot;</span><span class="p">,</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span> <span class="s2">&quot;link&quot;</span><span class="p">],</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">)</span>
+        <span class="n">sig_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;signal:\s*(-?\d+)\s*dBm&quot;</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sig_match</span><span class="p">:</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sig_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/proc/net/wireless&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">2</span><span class="p">:]:</span>
+                    <span class="k">if</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+                            <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+                            <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;noise&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
+                            <span class="k">break</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">metrics</span>
 
-def calculate_snr(metrics):
-    if metrics['signal'] is not None and metrics['noise'] is not None:
-        return metrics['signal'] - metrics['noise']
-    elif metrics['signal'] is not None:
-        return metrics['signal'] + 90
-    return None
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_snr</span><span class="p">(</span><span class="n">metrics</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;noise&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;noise&#39;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">90</span>
+    <span class="k">return</span> <span class="kc">None</span>
 
-def monitor(interface, model=None):
-    smoothed_snr = None
-    print(f&quot;{'Time':&lt;8} | {'Signal':&gt;7} | {'SNR':&gt;6} | {'Status':&lt;25}&quot;)
-    print(&quot;-&quot; * 50)
-    try:
-        while True:
-            timestamp = time.strftime(&quot;%H:%M:%S&quot;)
-            metrics = get_wireless_metrics(interface)
-            snr = calculate_snr(metrics)
-            if snr is not None:
-                smoothed_snr = snr if smoothed_snr is None else SMOOTHING_FACTOR * smoothed_snr + (1 - SMOOTHING_FACTOR) * snr
-            signal_str = f&quot;{metrics['signal']} dBm&quot; if metrics['signal'] is not None else &quot;N/A&quot;
-            snr_str = f&quot;{smoothed_snr:.1f} dB&quot; if smoothed_snr is not None else &quot;N/A&quot;
-            status = &quot;NO SIGNAL&quot;
-            if snr is not None:
-                if model:
-                    features = [[metrics['signal'] or -100, metrics['noise'] or -90, smoothed_snr or 0]]
-                    pred = model.predict(features)[0]
-                    status = f&quot;{pred:.1f} cm&quot; if isinstance(pred, float) else pred
-                else:
-                    status = (&quot;VERY CLOSE&quot; if smoothed_snr &lt; 26 else
-                              &quot;NORMAL RANGE&quot; if smoothed_snr &lt; 33 else
-                              &quot;MOVING AWAY&quot; if smoothed_snr &lt; 40 else
-                              &quot;FAR AWAY&quot;)
-            print(f&quot;{timestamp:&lt;8} | {signal_str:&gt;7} | {snr_str:&gt;6} | {status:&lt;25}&quot;, end=&quot;\r&quot;)
-            time.sleep(SAMPLING_RATE)
-    except KeyboardInterrupt:
-        print(&quot;\nMonitoring stopped.&quot;)
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">monitor</span><span class="p">(</span><span class="n">interface</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">smoothed_snr</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Time&#39;</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Signal&#39;</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;SNR&#39;</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Status&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">)</span>
+            <span class="n">metrics</span> <span class="o">=</span> <span class="n">get_wireless_metrics</span><span class="p">(</span><span class="n">interface</span><span class="p">)</span>
+            <span class="n">snr</span> <span class="o">=</span> <span class="n">calculate_snr</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">snr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">smoothed_snr</span> <span class="o">=</span> <span class="n">snr</span> <span class="k">if</span> <span class="n">smoothed_snr</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">SMOOTHING_FACTOR</span> <span class="o">*</span> <span class="n">smoothed_snr</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">SMOOTHING_FACTOR</span><span class="p">)</span> <span class="o">*</span> <span class="n">snr</span>
+            <span class="n">signal_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> dBm&quot;</span> <span class="k">if</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;N/A&quot;</span>
+            <span class="n">snr_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">smoothed_snr</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB&quot;</span> <span class="k">if</span> <span class="n">smoothed_snr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;N/A&quot;</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;NO SIGNAL&quot;</span>
+            <span class="k">if</span> <span class="n">snr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">model</span><span class="p">:</span>
+                    <span class="n">features</span> <span class="o">=</span> <span class="p">[[</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;noise&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="n">smoothed_snr</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">]]</span>
+                    <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pred</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="k">else</span> <span class="n">pred</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;VERY CLOSE&quot;</span> <span class="k">if</span> <span class="n">smoothed_snr</span> <span class="o">&lt;</span> <span class="mi">26</span> <span class="k">else</span>
+                              <span class="s2">&quot;NORMAL RANGE&quot;</span> <span class="k">if</span> <span class="n">smoothed_snr</span> <span class="o">&lt;</span> <span class="mi">33</span> <span class="k">else</span>
+                              <span class="s2">&quot;MOVING AWAY&quot;</span> <span class="k">if</span> <span class="n">smoothed_snr</span> <span class="o">&lt;</span> <span class="mi">40</span> <span class="k">else</span>
+                              <span class="s2">&quot;FAR AWAY&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timestamp</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">signal_str</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">snr_str</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">status</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">SAMPLING_RATE</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Monitoring stopped.&quot;</span><span class="p">)</span>
+</code></pre></div>
 <p>This code is robust, with fallbacks for metric extraction and support for both static and ML-based detection.<br />
 Hackers can extend it to log data to a remote server or trigger scripts on proximity events.</p>
 <hr />
@@ -605,39 +605,39 @@ Hackers can extend it to log data to a remote server or trigger scripts on proxi
 <li><strong>Tools:</strong> <code>iw</code>, <code>iwconfig</code>, and read access to <code>/proc/net/wireless</code>.</li>
 </ul>
 <p>Install dependencies:</p>
-<pre><code class="language-bash">pip install scikit-learn joblib numpy
-</code></pre>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>scikit-learn<span class="w"> </span>joblib<span class="w"> </span>numpy
+</code></pre></div>
 <p>Check your Wi-Fi interface:</p>
-<pre><code class="language-bash">ip link show
-</code></pre>
+<div class="highlight"><pre><span></span><code>ip<span class="w"> </span>link<span class="w"> </span>show
+</code></pre></div>
 <h3 id="commands">Commands</h3>
 <ul>
 <li>
 <p><strong>Monitor Mode:</strong>
-  <code>bash
-  python3 wifi_proximity.py --interface wlan0</code>
+  <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>wifi_proximity.py<span class="w"> </span>--interface<span class="w"> </span>wlan0
+</code></pre></div>
   Uses <code>wifi_proximity_model.pkl</code> if present; falls back to static thresholds.</p>
 </li>
 <li>
 <p><strong>Data Collection Mode:</strong>
-  <code>bash
-  python3 wifi_proximity.py --collect --interface wlan0</code>
+  <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>wifi_proximity.py<span class="w"> </span>--collect<span class="w"> </span>--interface<span class="w"> </span>wlan0
+</code></pre></div>
   Input distances (cm) or labels (e.g., "VERY CLOSE"). Saves to <code>wifi_prox_data.csv</code>.</p>
 </li>
 <li>
 <p><strong>Model Training Mode:</strong>
-  <code>bash
-  python3 wifi_proximity.py --train</code>
+  <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>wifi_proximity.py<span class="w"> </span>--train
+</code></pre></div>
   Trains and saves the model to <code>wifi_proximity_model.pkl</code>.</p>
 </li>
 </ul>
 <h3 id="sample-output">Sample Output</h3>
 <p>Monitoring output looks like:</p>
-<pre><code>Time     | Signal  | SNR    | Status
+<div class="highlight"><pre><span></span><code>Time     | Signal  | SNR    | Status
 ------------------------------------------------
 12:34:56 | -50 dBm | 40.0 dB | FAR AWAY
 12:34:57 | -48 dBm | 42.0 dB | FAR AWAY
-</code></pre>
+</code></pre></div>
 <p>With an ML model, you might see distances (e.g., "150.2 cm") for regression.</p>
 <hr />
 <h2 id="hacking-tips-and-tricks">Hacking Tips and Tricks</h2>
