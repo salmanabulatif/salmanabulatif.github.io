@@ -10,11 +10,11 @@
       
       
       
-        <link rel="canonical" href="https://sitename.example/2025/07/12/snr-blog/">
+        <link rel="canonical" href="https://sitename.example/2025/07/13/neural-network/">
       
       
+        <link rel="prev" href="../../12/snr-blog/">
       
-        <link rel="next" href="../../13/neural-network/">
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>SNR Blog - Salman Abulatif</title>
+        <title>Neural Network - Salman Abulatif</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#snr-blog" class="md-skip">
+        <a href="#neural-network" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SNR Blog
+              Neural Network
             
           </span>
         </div>
@@ -399,7 +399,7 @@
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2025-07-12 00:00:00+00:00" class="md-ellipsis">July 12, 2025</time>
+                        <time datetime="2025-07-13 00:00:00+00:00" class="md-ellipsis">July 13, 2025</time>
                       </div>
                     </li>
                     
@@ -435,241 +435,184 @@
 
 
 
-<h1 id="snr-blog">SNR Blog</h1>
-<p>Welcome to the blog for the <strong>Wi-Fi Proximity Sensor</strong> project, where we transform a standard Wi-Fi adapter into a real-time proximity detector using machine learning.</p>
+<h1 id="neural-network">Neural Network</h1>
+<p>Neural networks rely on two key mathematical processes: <strong>forward propagation</strong> (for predictions) and <strong>backward propagation</strong> (for learning via gradient descent).</p>
 <!-- more -->
 
-<h1 id="wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide">Wi-Fi Proximity Sensor with Machine Learning: A Hacker's Guide</h1>
-<p><strong>Hey hackers and pentesters!</strong><br />
-Want to turn a cheap Wi-Fi adapter into a stealthy proximity sensor for physical security assessments or red team ops? This Python-based project leverages wireless signal metrics—signal strength, noise level, and Signal-to-Noise Ratio (SNR)—to estimate distances to nearby objects or people. Whether you're detecting movement in a target environment, building covert presence detection, or integrating with IoT for sneaky automation, this tool has you covered. It combines raw signal processing with a machine learning pipeline for precision and adaptability.</p>
-<p><em>The full source code will drop soon on <a href="https://github.com/salmanabulatif/SNRv0">GitHub</a> (link coming soon).</em></p>
+<h1 id="the-math-behind-neural-network-forward-and-backward-propagation">The Math Behind Neural Network Forward and Backward Propagation</h1>
+<p>Neural networks rely on two key mathematical processes: <strong>forward propagation</strong> (for predictions) and <strong>backward propagation</strong> (for learning via gradient descent). In this post, we break down the core math behind these steps using a simple 3-layer neural network example. Hand-written calculations and diagrams from my notes are included for clarity.</p>
 <hr />
-<h2 id="project-overview">Project Overview</h2>
-<p>This Wi-Fi Proximity Sensor runs on Linux, sniffing metrics from a Wi-Fi interface to estimate proximity. It supports two modes: static threshold-based detection for quick setups, and a machine learning mode that trains on custom data for environment-specific accuracy. Built with Python 3, <code>scikit-learn</code>, and <code>joblib</code>, it uses system tools (<code>iw</code>, <code>/proc/net/wireless</code>, <code>iwconfig</code>) to pull raw signal data.</p>
-<p>For pentesters, this is a lightweight, hackable tool for:
-- Physical security testing
-- Rogue device detection
-- Social engineering ops where proximity matters</p>
-<hr />
-<h2 id="key-features">Key Features</h2>
+<h2 id="network-architecture">Network Architecture</h2>
+<p>We consider a neural network with:</p>
 <ul>
-<li><strong>Metric Sniffing:</strong> Pulls signal strength and noise using multiple Linux tools for reliability across setups.</li>
-<li><strong>Proximity Estimation:</strong> Maps SNR to proximity zones ("Very Close," "Normal Range," "Moving Away," "Far Away") or exact distances via ML.</li>
-<li><strong>Signal Smoothing:</strong> Uses exponential moving average (EMA) to stabilize noisy Wi-Fi signals.</li>
-<li><strong>Machine Learning:</strong> Collects data and trains regression (<code>LinearRegression</code>) or classification (<code>SVC</code>) models for custom environments.</li>
-<li><strong>Real-Time Monitoring:</strong> Low-latency updates for dynamic scenarios like tailgating detection.</li>
-<li><strong>Pentesting Applications:</strong> Think intrusion detection, physical access monitoring, or IoT exploitation.</li>
+<li><strong>Input layer:</strong> 3 neurons (<code>x₁</code>, <code>x₂</code>, <code>x₃</code>)</li>
+<li><strong>Hidden layer:</strong> 2 neurons (<code>h₄</code>, <code>h₅</code>)</li>
+<li><strong>Output layer:</strong> 1 neuron (<code>o₆</code>)</li>
+</ul>
+<pre><code class="language-text">Input Layer (x₁, x₂, x₃) → Hidden Layer (h₄, h₅) → Output Layer (o₆)
+</code></pre>
+<p><img alt="image3" src="image3" /></p>
+<hr />
+<h2 id="1-forward-pass">1. Forward Pass</h2>
+<p>The forward pass computes the output of each neuron layer-by-layer using weights (<code>ω</code>), biases (<code>b</code>), and activation functions (sigmoid here).</p>
+<h3 id="hidden-layer-calculations">Hidden Layer Calculations</h3>
+<p>For neuron 4 (<code>h₄</code>):</p>
+<p>$$
+a_4 = \sigma(\text{inputs} \cdot \text{weights} + b_4)
+$$</p>
+<p>From the notes:</p>
+<p>$$
+a_4 = \frac{1}{1 + e^{-(-0.7)}} = 0.332
+$$</p>
+<p>For neuron 5 (<code>h₅</code>):</p>
+<p>$$
+a_5 = \frac{1}{1 + e^{-0.1}} = 0.325
+$$</p>
+<h3 id="output-layer-calculation">Output Layer Calculation</h3>
+<p>$$
+o_6 = \sigma(a_4 \omega_{46} + a_5 \omega_{56} + b_6)
+$$</p>
+<p>$$
+a_6 = \frac{1}{1 + e^{-(-0.206)}} = 0.194
+$$</p>
+<p><img alt="image2" src="image2" /></p>
+<hr />
+<h2 id="2-loss-calculation">2. Loss Calculation</h2>
+<p>The error (loss) is computed between the prediction (<code>o₆</code>) and the target value.</p>
+<p>From the notes (target = 1):</p>
+<p>$$
+\text{Error} = 1 - 0.414 = 0.526
+$$</p>
+<hr />
+<h2 id="3-backward-propagation">3. Backward Propagation</h2>
+<p>Backward propagation applies the chain rule to compute gradients for each weight and bias.</p>
+<h3 id="output-neuron-gradient-delta_6">Output Neuron Gradient ((\delta_6))</h3>
+<p>$$
+\delta_6 = \text{Error} \times \sigma'(o_6)
+$$</p>
+<p>where </p>
+<p>$$
+\sigma'(z) = \sigma(z)(1 - \sigma(z))
+$$</p>
+<p>From the notes:</p>
+<p>$$
+\delta_6 = 0.414 \times (1 - 0.414) \times (1 - 0.414) = 0.131
+$$</p>
+<h3 id="hidden-neuron-gradients">Hidden Neuron Gradients</h3>
+<p>For neuron 5 ((\delta_5)):</p>
+<p>$$
+\delta_5 = a_5(1 - a_5) \times (\delta_6 \cdot \omega_{56})
+$$</p>
+<p>$$
+\delta_5 = 0.325 \times (1 - 0.525) \times (0.2 \times 0.131) = 0.095
+$$</p>
+<p>For neuron 4 ((\delta_4)):</p>
+<p>$$
+\delta_4 = a_4(1 - a_4) \times (\delta_6 \cdot \omega_{46})
+$$</p>
+<p>$$
+\delta_4 = 0.332 \times (1 - 0.332) \times (0.2 \times 0.131) = 0.095
+$$</p>
+<p><img alt="image1" src="image1" /></p>
+<hr />
+<h2 id="4-weight-updates">4. Weight Updates</h2>
+<p>Weights are updated using the computed gradients and a learning rate ((\eta=0.9)).</p>
+<p><strong>Update Rule:</strong></p>
+<p>$$
+\Delta \omega_{ij} = \eta \times \delta_i \times a_j
+$$</p>
+<p>$$
+\omega_{ij}^{\text{new}} = \omega_{ij}^{\text{old}} + \Delta \omega_{ij}
+$$</p>
+<p><strong>Example Updates (see notes):</strong></p>
+<ul>
+<li>
+<p><strong>Weight (\omega_{16}) (input 1 → output 6):</strong></p>
+<p>$$
+\Delta \omega_{16} = 0.9 \times 0.131 \times 0.392 = 0.046
+$$</p>
+<p>$$
+\omega_{16}^{\text{new}} = 0.939 - 0.3 = 0.639
+$$</p>
+</li>
+<li>
+<p><strong>Weight (\omega_{35}) (input 3 → hidden 5):</strong></p>
+<p>$$
+\Delta \omega_{35} = 0.9 \times 0.00653 \times 1 = 0.00588
+$$</p>
+<p>$$
+\omega_{35}^{\text{new}} = 0.2 - 0.00857 = 0.19143
+$$</p>
+</li>
 </ul>
 <hr />
-<h2 id="technical-breakdown">Technical Breakdown</h2>
-<p>The system is built for hackers who love to tinker.<br />
-It operates in <strong>four modes</strong>:</p>
+<h2 id="5-bias-updates">5. Bias Updates</h2>
+<p>Biases are updated similarly:</p>
+<p>$$
+b_i^{\text{new}} = b_i^{\text{old}} + \eta \times \delta_i
+$$</p>
+<p>For output neuron 6:</p>
+<p>$$
+b_6^{\text{new}} = 0.1 + (0.9 \times 0.131) = 0.218
+$$</p>
+<p><img alt="image4" src="image4" /></p>
+<hr />
+<h2 id="key-equations">Key Equations</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Equation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Forward Pass</td>
+<td>( a_j = \sigma\left(\sum_i \omega_{ij} x_i + b_j\right) )</td>
+</tr>
+<tr>
+<td>Sigmoid</td>
+<td>( \sigma(z) = \dfrac{1}{1 + e^{-z}} )</td>
+</tr>
+<tr>
+<td>Output Gradient</td>
+<td>( \delta_k = (y - \hat{y}) \cdot \sigma'(o_k) )</td>
+</tr>
+<tr>
+<td>Hidden Gradient</td>
+<td>( \delta_j = \sigma'(a_j) \sum_k (\delta_k \omega_{jk}) )</td>
+</tr>
+<tr>
+<td>Weight Update</td>
+<td>( \Delta \omega_{ij} = \eta \cdot \delta_j \cdot a_i )</td>
+</tr>
+<tr>
+<td>Bias Update</td>
+<td>( \Delta b_j = \eta \cdot \delta_j )</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="why-this-matters">Why This Matters</h2>
+<p>Backpropagation efficiently computes gradients by:</p>
 <ol>
-<li><strong>Monitoring Mode:</strong> Real-time tracking of Wi-Fi metrics with proximity estimates using static thresholds or a trained model.</li>
-<li><strong>Data Collection Mode:</strong> Logs signal data with ground-truth distances or labels for training custom models.</li>
-<li><strong>Model Training Mode:</strong> Builds a <code>scikit-learn</code> pipeline to predict distances or proximity zones.</li>
-<li><strong>Inference Mode:</strong> Deploys the trained model for live, environment-tuned proximity detection.</li>
+<li><strong>Forward pass:</strong> Calculate predictions and cache values.</li>
+<li><strong>Backward pass:</strong> Apply the chain rule for error gradients.</li>
+<li><strong>Update:</strong> Adjust weights and biases to minimize loss.</li>
 </ol>
+<p>Your files and these notes demonstrate a practical implementation of these principles—calculating gradients and updating weights. While the math may appear complex, it systematically optimizes the network using calculus and linear algebra.</p>
 <hr />
-<h3 id="signal-processing">Signal Processing</h3>
-<p>The system scrapes Wi-Fi metrics using a tiered approach to handle diverse hardware:</p>
+<p><em>Handwritten notes and calculations for visual reference:</em></p>
 <ul>
-<li><strong><code>iw dev &lt;interface&gt; link</code>:</strong> Modern, clean way to get signal strength (dBm).</li>
-<li><strong><code>/proc/net/wireless</code>:</strong> Kernel-level stats for signal and noise, great for older systems.</li>
-<li><strong><code>iwconfig</code>:</strong> Fallback for legacy setups, parsing signal/noise from text output.</li>
-</ul>
-<p><strong>SNR Calculation:</strong></p>
-<pre><code>SNR = Signal Strength (dBm) - Noise Level (dBm)
-</code></pre>
-<p>If noise is unavailable (common in some adapters), it approximates:</p>
-<pre><code>SNR ≈ Signal Strength + 90
-</code></pre>
-<p><strong>Signal Smoothing (EMA, α = 0.7):</strong></p>
-<pre><code>SNR_smoothed_t = α · SNR_smoothed_{t-1} + (1-α) · SNR_raw_t
-</code></pre>
-<p>This keeps readings stable for reliable proximity estimates during pentests.</p>
-<hr />
-<h3 id="machine-learning-pipeline">Machine Learning Pipeline</h3>
-<p>For hackers, the ML component is where things get juicy. Feature vector includes:</p>
-<ul>
-<li>Signal strength (dBm, default -100 if missing)</li>
-<li>Noise level (dBm, default -90 if missing)</li>
-<li>Smoothed SNR (dB, default 0 if missing)</li>
-</ul>
-<p>The system auto-detects label type:</p>
-<ul>
-<li><strong>Regression</strong> (<code>LinearRegression</code>): Predicts distance (cm), mapped to zones:</li>
-<li>&lt;50 cm: "VERY CLOSE"</li>
-<li>50–200 cm: "NORMAL RANGE"</li>
-<li>200–400 cm: "MOVING AWAY"</li>
-<li>
-<blockquote>
-<p>400 cm: "FAR AWAY"</p>
-</blockquote>
-</li>
-<li><strong>Classification</strong> (<code>SVC</code> with probability): Directly predicts proximity zones.</li>
-</ul>
-<p>A <code>StandardScaler</code> normalizes features to handle varying signal ranges. Models are serialized with <code>joblib</code> for quick deployment.</p>
-<p>Pentesters can train models in specific environments (e.g., target office) to account for walls, interference, or hardware quirks.</p>
-<hr />
-<h3 id="pentesting-applications">Pentesting Applications</h3>
-<ul>
-<li><strong>Physical Intrusion Detection:</strong> Detect tailgating or unauthorized access by monitoring SNR changes near doors or secure areas.</li>
-<li><strong>Rogue Device Tracking:</strong> Identify movement of Wi-Fi-enabled devices (e.g., laptops, phones) in restricted zones.</li>
-<li><strong>IoT Exploitation:</strong> Integrate with MQTT or Home Assistant to trigger payloads when someone approaches.</li>
-<li><strong>Social Engineering:</strong> Use proximity data to time physical access attempts or device interactions.</li>
+<li>Network diagram: <img alt="image3" src="image3" /></li>
+<li>Forward pass &amp; error calculation: <img alt="image2" src="image2" /></li>
+<li>Backpropagation and weight update math: <img alt="image1" src="image1" /></li>
+<li>Bias update math: <img alt="image4" src="image4" /></li>
 </ul>
 <hr />
-<h2 id="core-code-preview">Core Code (Preview)</h2>
-<p>Here’s a stripped-down version of the core logic, focusing on metric extraction and monitoring.<br />
-The full code, with data collection and training, will be released soon.</p>
-<pre><code class="language-python">#!/usr/bin/env python3
-import subprocess
-import re
-import time
-import joblib
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
-
-INTERFACE = &quot;wlan0&quot;
-SAMPLING_RATE = 0.5
-SMOOTHING_FACTOR = 0.7
-MODEL_FILE = &quot;wifi_proximity_model.pkl&quot;
-
-def get_wireless_metrics(interface):
-    metrics = {'signal': None, 'noise': None}
-    try:
-        output = subprocess.check_output([&quot;iw&quot;, &quot;dev&quot;, interface, &quot;link&quot;], text=True, stderr=subprocess.DEVNULL)
-        sig_match = re.search(r&quot;signal:\s*(-?\d+)\s*dBm&quot;, output)
-        if sig_match:
-            metrics['signal'] = int(sig_match.group(1))
-    except Exception:
-        try:
-            with open(&quot;/proc/net/wireless&quot;, &quot;r&quot;) as f:
-                for line in f.readlines()[2:]:
-                    if interface in line:
-                        parts = line.strip().split()
-                        if len(parts) &gt;= 5:
-                            metrics['signal'] = int(float(parts[3]))
-                            metrics['noise'] = int(float(parts[4]))
-                            break
-        except Exception:
-            pass
-    return metrics
-
-def calculate_snr(metrics):
-    if metrics['signal'] is not None and metrics['noise'] is not None:
-        return metrics['signal'] - metrics['noise']
-    elif metrics['signal'] is not None:
-        return metrics['signal'] + 90
-    return None
-
-def monitor(interface, model=None):
-    smoothed_snr = None
-    print(f&quot;{'Time':&lt;8} | {'Signal':&gt;7} | {'SNR':&gt;6} | {'Status':&lt;25}&quot;)
-    print(&quot;-&quot; * 50)
-    try:
-        while True:
-            timestamp = time.strftime(&quot;%H:%M:%S&quot;)
-            metrics = get_wireless_metrics(interface)
-            snr = calculate_snr(metrics)
-            if snr is not None:
-                smoothed_snr = snr if smoothed_snr is None else SMOOTHING_FACTOR * smoothed_snr + (1 - SMOOTHING_FACTOR) * snr
-            signal_str = f&quot;{metrics['signal']} dBm&quot; if metrics['signal'] is not None else &quot;N/A&quot;
-            snr_str = f&quot;{smoothed_snr:.1f} dB&quot; if smoothed_snr is not None else &quot;N/A&quot;
-            status = &quot;NO SIGNAL&quot;
-            if snr is not None:
-                if model:
-                    features = [[metrics['signal'] or -100, metrics['noise'] or -90, smoothed_snr or 0]]
-                    pred = model.predict(features)[0]
-                    status = f&quot;{pred:.1f} cm&quot; if isinstance(pred, float) else pred
-                else:
-                    status = (&quot;VERY CLOSE&quot; if smoothed_snr &lt; 26 else
-                              &quot;NORMAL RANGE&quot; if smoothed_snr &lt; 33 else
-                              &quot;MOVING AWAY&quot; if smoothed_snr &lt; 40 else
-                              &quot;FAR AWAY&quot;)
-            print(f&quot;{timestamp:&lt;8} | {signal_str:&gt;7} | {snr_str:&gt;6} | {status:&lt;25}&quot;, end=&quot;\r&quot;)
-            time.sleep(SAMPLING_RATE)
-    except KeyboardInterrupt:
-        print(&quot;\nMonitoring stopped.&quot;)
-</code></pre>
-<p>This code is robust, with fallbacks for metric extraction and support for both static and ML-based detection.<br />
-Hackers can extend it to log data to a remote server or trigger scripts on proximity events.</p>
-<hr />
-<h2 id="setup-and-usage">Setup and Usage</h2>
-<h3 id="requirements">Requirements</h3>
-<ul>
-<li><strong>OS:</strong> Linux (Kali, Ubuntu, etc.) with a Wi-Fi adapter (monitor mode not required but useful).</li>
-<li><strong>Software:</strong> Python 3.6+, <code>scikit-learn</code>, <code>joblib</code>, <code>numpy</code>.</li>
-<li><strong>Tools:</strong> <code>iw</code>, <code>iwconfig</code>, and read access to <code>/proc/net/wireless</code>.</li>
-</ul>
-<p>Install dependencies:</p>
-<pre><code class="language-bash">pip install scikit-learn joblib numpy
-</code></pre>
-<p>Check your Wi-Fi interface:</p>
-<pre><code class="language-bash">ip link show
-</code></pre>
-<h3 id="commands">Commands</h3>
-<ul>
-<li>
-<p><strong>Monitor Mode:</strong>
-  <code>bash
-  python3 wifi_proximity.py --interface wlan0</code>
-  Uses <code>wifi_proximity_model.pkl</code> if present; falls back to static thresholds.</p>
-</li>
-<li>
-<p><strong>Data Collection Mode:</strong>
-  <code>bash
-  python3 wifi_proximity.py --collect --interface wlan0</code>
-  Input distances (cm) or labels (e.g., "VERY CLOSE"). Saves to <code>wifi_prox_data.csv</code>.</p>
-</li>
-<li>
-<p><strong>Model Training Mode:</strong>
-  <code>bash
-  python3 wifi_proximity.py --train</code>
-  Trains and saves the model to <code>wifi_proximity_model.pkl</code>.</p>
-</li>
-</ul>
-<h3 id="sample-output">Sample Output</h3>
-<p>Monitoring output looks like:</p>
-<pre><code>Time     | Signal  | SNR    | Status
-------------------------------------------------
-12:34:56 | -50 dBm | 40.0 dB | FAR AWAY
-12:34:57 | -48 dBm | 42.0 dB | FAR AWAY
-</code></pre>
-<p>With an ML model, you might see distances (e.g., "150.2 cm") for regression.</p>
-<hr />
-<h2 id="hacking-tips-and-tricks">Hacking Tips and Tricks</h2>
-<ul>
-<li><strong>Spoofing Defense:</strong> Wi-Fi signals can be manipulated (e.g., via signal amplifiers). Train models in the target environment to detect anomalies in SNR patterns.</li>
-<li><strong>Stealth Mode:</strong> Run in a Docker container or Raspberry Pi for covert deployment. Redirect output to a log file or C2 server with <code>tee</code> or <code>nc</code>.</li>
-<li><strong>Model Evasion:</strong> Test model robustness by introducing noise (e.g., using <code>aircrack-ng</code> to simulate interference). Retrain with adversarial data to harden the model.</li>
-<li><strong>Integration:</strong> Pipe proximity events to <code>metasploit</code> or <code>nmap</code> scripts for automated pentesting workflows.</li>
-<li><strong>Hardware Mods:</strong> Use high-gain antennas to extend range or directional antennas for precise tracking.</li>
-</ul>
-<hr />
-<h2 id="challenges-and-limitations">Challenges and Limitations</h2>
-<ul>
-<li><strong>Signal Noise:</strong> Multipath effects, walls, and interference can skew SNR. Train models with diverse data to compensate.</li>
-<li><strong>Hardware Variability:</strong> Some adapters don’t report noise, forcing reliance on the fallback SNR formula. Test on target hardware.</li>
-<li><strong>ML Dependence:</strong> Model accuracy hinges on training data quality. Collect data in realistic conditions (e.g., during a recon phase).</li>
-<li><strong>Latency:</strong> The 0.5s sampling rate may miss rapid movements. Tune <code>SAMPLING_RATE</code> for faster response at the cost of stability.</li>
-</ul>
-<hr />
-<h2 id="future-enhancements-for-pentesters">Future Enhancements for Pentesters</h2>
-<ul>
-<li><strong>Multi-Adapter Support:</strong> Combine multiple Wi-Fi interfaces for triangulation or redundancy.</li>
-<li><strong>Packet Injection:</strong> Integrate with <code>scapy</code> to correlate proximity with specific devices (MAC addresses).</li>
-<li><strong>C2 Integration:</strong> Stream data to a command-and-control server for remote monitoring.</li>
-<li><strong>ML Upgrades:</strong> Swap <code>LinearRegression</code>/<code>SVC</code> for XGBoost or neural nets for better accuracy.</li>
-<li><strong>Web Dashboard:</strong> Build a Flask-based UI for real-time visualization during engagements.</li>
-</ul>
-<hr />
-<h2 id="conclusion">Conclusion</h2>
-<p>This Wi-Fi Proximity Sensor is a hacker’s dream for physical security testing.<br />
-It’s lightweight, customizable, and perfect for detecting movement, triggering payloads, or enhancing red team ops. Whether you’re sneaking through a facility or building a stealthy IoT trap, this tool delivers.</p>
-<p><em>The full code will hit <a href="#">GitHub</a> (link coming soon), so stay tuned. Grab a Wi-Fi adapter, fire up Kali, and start hacking proximity like a pro!</em></p>
+<p><strong>References:</strong><br />
+- <a href="http://neuralnetworksanddeeplearning.com/">Neural Networks and Deep Learning</a>
+- <a href="http://cs231n.github.io/neural-networks-2/">CS231n: Convolutional Neural Networks for Visual Recognition (Stanford)</a></p>
 
 
 
