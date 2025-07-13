@@ -17,7 +17,7 @@ Welcome to the blog for the **Wi-Fi Proximity Sensor** project, where we transfo
 **Hey hackers and pentesters!**  
 Want to turn a cheap Wi-Fi adapter into a stealthy proximity sensor for physical security assessments or red team ops? This Python-based project leverages wireless signal metrics—signal strength, noise level, and Signal-to-Noise Ratio (SNR)—to estimate distances to nearby objects or people. Whether you're detecting movement in a target environment, building covert presence detection, or integrating with IoT for sneaky automation, this tool has you covered. It combines raw signal processing with a machine learning pipeline for precision and adaptability.
 
-*The full source code will drop soon on [GitHub](#) (link coming soon).*
+*The full source code will drop soon on [GitHub](https://github.com/salmanabulatif/SNRv0) (link coming soon).*
 
 ---
 
