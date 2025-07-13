@@ -451,7 +451,7 @@
 </ul>
 <div class="highlight"><pre><span></span><code>Input Layer (x₁, x₂, x₃) → Hidden Layer (h₄, h₅) → Output Layer (o₆)
 </code></pre></div>
-<p><img alt="image3" src="image3.jpeg" /></p>
+<p><img alt="image3" src="../../../../image3.jpeg" /></p>
 <hr />
 <h2 id="1-forward-pass">1. Forward Pass</h2>
 <p>The forward pass computes the output of each neuron layer-by-layer using weights (ω), biases (b), and activation functions (sigmoid here).</p>
@@ -470,7 +470,7 @@
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>a6 = 1 / (1 + exp(-(-0.206))) = 0.194
 </code></pre></div>
-<p><img alt="image2" src="image2.jpeg" /></p>
+<p><img alt="image2" src="../../../../image2.jpeg" /></p>
 <hr />
 <h2 id="2-loss-calculation">2. Loss Calculation</h2>
 <p>The error (loss) is computed between the prediction (o₆) and the target value.</p>
@@ -498,7 +498,7 @@
 <div class="highlight"><pre><span></span><code>δ4 = a4 * (1 - a4) × (δ6 * ω46)
 δ4 = 0.332 × (1 - 0.332) × (0.2 × 0.131) = 0.095
 </code></pre></div>
-<p><img alt="image1" src="image1.jpeg" /></p>
+<p><img alt="image1" src="../../../../image1.jpeg" /></p>
 <hr />
 <h2 id="4-weight-updates">4. Weight Updates</h2>
 <p>Weights are updated using the computed gradients and a learning rate (η=0.9).</p>
@@ -529,7 +529,7 @@
 <p>For output neuron 6:</p>
 <div class="highlight"><pre><span></span><code>b6_new = 0.1 + (0.9 × 0.131) = 0.218
 </code></pre></div>
-<p><img alt="image4" src="image4.jpeg" /></p>
+<p><img alt="image4" src="../../../../image4.jpeg" /></p>
 <hr />
 <h2 id="key-equations">Key Equations</h2>
 <table>
@@ -578,10 +578,10 @@
 <hr />
 <p><em>Handwritten notes and calculations for visual reference:</em></p>
 <ul>
-<li>Network diagram: <img alt="image3" src="image3.jpeg" /></li>
-<li>Forward pass &amp; error calculation: <img alt="image2" src="image2.jpeg" /></li>
-<li>Backpropagation and weight update math: <img alt="image1" src="image1.jpeg" /></li>
-<li>Bias update math: <img alt="image4" src="image4.jpeg" /></li>
+<li>Network diagram: <img alt="image3" src="../../../../image3.jpeg" /></li>
+<li>Forward pass &amp; error calculation: <img alt="image2" src="../../../../image2.jpeg" /></li>
+<li>Backpropagation and weight update math: <img alt="image1" src="../../../../image1.jpeg" /></li>
+<li>Bias update math: <img alt="image4" src="../../../../image4.jpeg" /></li>
 </ul>
 <hr />
 <p><strong>References:</strong><br />
