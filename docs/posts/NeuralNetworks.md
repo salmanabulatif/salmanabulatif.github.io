@@ -22,9 +22,9 @@ Neural networks rely on two key mathematical processes: **forward propagation** 
 
 We consider a neural network with:
 
-- **Input layer:** 3 neurons (`x₁`, `x₂`, `x₃`)
-- **Hidden layer:** 2 neurons (`h₄`, `h₅`)
-- **Output layer:** 1 neuron (`o₆`)
+- **Input layer:** 3 neurons (x₁, x₂, x₃)
+- **Hidden layer:** 2 neurons (h₄, h₅)
+- **Output layer:** 1 neuron (o₆)
 
 ```
 Input Layer (x₁, x₂, x₃) → Hidden Layer (h₄, h₅) → Output Layer (o₆)
@@ -36,36 +36,36 @@ Input Layer (x₁, x₂, x₃) → Hidden Layer (h₄, h₅) → Output Layer (o
 
 ## 1. Forward Pass
 
-The forward pass computes the output of each neuron layer-by-layer using weights (`ω`), biases (`b`), and activation functions (sigmoid here).
+The forward pass computes the output of each neuron layer-by-layer using weights (ω), biases (b), and activation functions (sigmoid here).
 
 ### Hidden Layer Calculations
 
-For neuron 4 (`h₄`):
+For neuron 4 (h₄):
 
-```math
-a_4 = \sigma(\text{inputs} \cdot \text{weights} + b_4)
+```
+a4 = sigmoid(inputs * weights + b4)
 ```
 
 From the notes:
 
-```math
-a_4 = \frac{1}{1 + e^{-(-0.7)}} = 0.332
+```
+a4 = 1 / (1 + exp(-(-0.7))) = 0.332
 ```
 
-For neuron 5 (`h₅`):
+For neuron 5 (h₅):
 
-```math
-a_5 = \frac{1}{1 + e^{-0.1}} = 0.325
+```
+a5 = 1 / (1 + exp(-0.1)) = 0.325
 ```
 
 ### Output Layer Calculation
 
-```math
-o_6 = \sigma(a_4 \omega_{46} + a_5 \omega_{56} + b_6)
+```
+o6 = sigmoid(a4 * ω46 + a5 * ω56 + b6)
 ```
 
-```math
-a_6 = \frac{1}{1 + e^{-(-0.206)}} = 0.194
+```
+a6 = 1 / (1 + exp(-(-0.206))) = 0.194
 ```
 
 ![image2](image2)
@@ -74,12 +74,12 @@ a_6 = \frac{1}{1 + e^{-(-0.206)}} = 0.194
 
 ## 2. Loss Calculation
 
-The error (loss) is computed between the prediction (`o₆`) and the target value.
+The error (loss) is computed between the prediction (o₆) and the target value.
 
 From the notes (target = 1):
 
-```math
-\text{Error} = 1 - 0.414 = 0.526
+```
+Error = 1 - 0.414 = 0.526
 ```
 
 ---
@@ -88,44 +88,38 @@ From the notes (target = 1):
 
 Backward propagation applies the chain rule to compute gradients for each weight and bias.
 
-### Output Neuron Gradient (\(\delta_6\))
+### Output Neuron Gradient (δ₆)
 
-```math
-\delta_6 = \text{Error} \times \sigma'(o_6)
+```
+δ6 = Error × sigmoid'(o6)
 ```
 
 where
 
-```math
-\sigma'(z) = \sigma(z)(1 - \sigma(z))
+```
+sigmoid'(z) = sigmoid(z) * (1 - sigmoid(z))
 ```
 
 From the notes:
 
-```math
-\delta_6 = 0.414 \times (1 - 0.414) \times (1 - 0.414) = 0.131
+```
+δ6 = 0.414 × (1 - 0.414) × (1 - 0.414) = 0.131
 ```
 
 ### Hidden Neuron Gradients
 
-For neuron 5 (\(\delta_5\)):
+For neuron 5 (δ₅):
 
-```math
-\delta_5 = a_5(1 - a_5) \times (\delta_6 \cdot \omega_{56})
+```
+δ5 = a5 * (1 - a5) × (δ6 * ω56)
+δ5 = 0.325 × (1 - 0.525) × (0.2 × 0.131) = 0.095
 ```
 
-```math
-\delta_5 = 0.325 \times (1 - 0.525) \times (0.2 \times 0.131) = 0.095
+For neuron 4 (δ₄):
+
 ```
-
-For neuron 4 (\(\delta_4\)):
-
-```math
-\delta_4 = a_4(1 - a_4) \times (\delta_6 \cdot \omega_{46})
-```
-
-```math
-\delta_4 = 0.332 \times (1 - 0.332) \times (0.2 \times 0.131) = 0.095
+δ4 = a4 * (1 - a4) × (δ6 * ω46)
+δ4 = 0.332 × (1 - 0.332) × (0.2 × 0.131) = 0.095
 ```
 
 ![image1](image1)
@@ -134,38 +128,29 @@ For neuron 4 (\(\delta_4\)):
 
 ## 4. Weight Updates
 
-Weights are updated using the computed gradients and a learning rate (\(\eta=0.9\)).
+Weights are updated using the computed gradients and a learning rate (η=0.9).
 
 **Update Rule:**
 
-```math
-\Delta \omega_{ij} = \eta \times \delta_i \times a_j
 ```
-
-```math
-\omega_{ij}^{\text{new}} = \omega_{ij}^{\text{old}} + \Delta \omega_{ij}
+Δωij = η × δi × aj
+ωij_new = ωij_old + Δωij
 ```
 
 **Example Updates (see notes):**
 
-- **Weight \(\omega_{16}\) (input 1 → output 6):**
+- Weight ω16 (input 1 → output 6):
 
-    ```math
-    \Delta \omega_{16} = 0.9 \times 0.131 \times 0.392 = 0.046
+    ```
+    Δω16 = 0.9 × 0.131 × 0.392 = 0.046
+    ω16_new = 0.939 - 0.3 = 0.639
     ```
 
-    ```math
-    \omega_{16}^{\text{new}} = 0.939 - 0.3 = 0.639
+- Weight ω35 (input 3 → hidden 5):
+
     ```
-
-- **Weight \(\omega_{35}\) (input 3 → hidden 5):**
-
-    ```math
-    \Delta \omega_{35} = 0.9 \times 0.00653 \times 1 = 0.00588
-    ```
-
-    ```math
-    \omega_{35}^{\text{new}} = 0.2 - 0.00857 = 0.19143
+    Δω35 = 0.9 × 0.00653 × 1 = 0.00588
+    ω35_new = 0.2 - 0.00857 = 0.19143
     ```
 
 ---
@@ -174,14 +159,14 @@ Weights are updated using the computed gradients and a learning rate (\(\eta=0.9
 
 Biases are updated similarly:
 
-```math
-b_i^{\text{new}} = b_i^{\text{old}} + \eta \times \delta_i
+```
+bi_new = bi_old + η × δi
 ```
 
 For output neuron 6:
 
-```math
-b_6^{\text{new}} = 0.1 + (0.9 \times 0.131) = 0.218
+```
+b6_new = 0.1 + (0.9 × 0.131) = 0.218
 ```
 
 ![image4](image4)
@@ -192,12 +177,12 @@ b_6^{\text{new}} = 0.1 + (0.9 \times 0.131) = 0.218
 
 | Component         | Equation                                              |
 | ----------------- | ---------------------------------------------------- |
-| Forward Pass      | <span style="font-family:monospace;">\( a_j = \sigma\left(\sum_i \omega_{ij} x_i + b_j\right) \)</span>      |
-| Sigmoid           | <span style="font-family:monospace;">\( \sigma(z) = \dfrac{1}{1 + e^{-z}} \)</span>              |
-| Output Gradient   | <span style="font-family:monospace;">\( \delta_k = (y - \hat{y}) \cdot \sigma'(o_k) \)</span>   |
-| Hidden Gradient   | <span style="font-family:monospace;">\( \delta_j = \sigma'(a_j) \sum_k (\delta_k \omega_{jk}) \)</span> |
-| Weight Update     | <span style="font-family:monospace;">\( \Delta \omega_{ij} = \eta \cdot \delta_j \cdot a_i \)</span> |
-| Bias Update       | <span style="font-family:monospace;">\( \Delta b_j = \eta \cdot \delta_j \)</span>              |
+| Forward Pass      | a_j = sigmoid(sum_over_i(ω_ij * x_i) + b_j)          |
+| Sigmoid           | sigmoid(z) = 1 / (1 + exp(-z))                       |
+| Output Gradient   | δ_k = (y - y_hat) * sigmoid'(o_k)                    |
+| Hidden Gradient   | δ_j = sigmoid'(a_j) * sum_over_k(δ_k * ω_jk)         |
+| Weight Update     | Δω_ij = η * δ_j * a_i                                |
+| Bias Update       | Δb_j = η * δ_j                                       |
 
 ---
 
