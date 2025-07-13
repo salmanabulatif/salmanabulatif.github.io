@@ -395,15 +395,210 @@
     </div>
   </header>
   <div class="md-post__content md-typeset">
-    <h2 id="snr-blog"><a class="toclink" href="../../2025/12/07/snr-blog/">SNR Blog</a></h2>
-<p>Welcome to the blog for the <strong>Wi-Fi Proximity Sensor</strong> project, where we transform a standard Wi-Fi adapter into a real-time proximity detector using machine learning.</p>
+    <h2 id="wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/">Wi-Fi Proximity Sensor with Machine Learning: A Hacker's Guide</a></h2>
+<p>Hey hackers and pentesters! Want to turn a cheap Wi-Fi adapter into a stealthy proximity sensor for physical security assessments or red team ops? This Python-based project leverages wireless signal metrics—signal strength, noise level, and Signal-to-Noise Ratio (SNR)—to estimate distances to nearby objects or people. Whether you're detecting movement in a target environment, building covert presence detection, or integrating with IoT for sneaky automation, this tool has you covered. It combines raw signal processing with a machine learning pipeline for precision and adaptability. The full source code will drop soon on <a href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#">GitHub</a> (link coming soon).</p>
+<h3 id="project-overview"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#project-overview">Project Overview</a></h3>
+<p>This Wi-Fi Proximity Sensor runs on Linux, sniffing metrics from a Wi-Fi interface to estimate proximity. It supports two modes: static threshold-based detection for quick setups and a machine learning mode that trains on custom data for environment-specific accuracy. Built with Python 3, <code>scikit-learn</code>, and <code>joblib</code>, it uses system tools (<code>iw</code>, <code>/proc/net/wireless</code>, <code>iwconfig</code>) to pull raw signal data. For pentesters, this is a lightweight, hackable tool for physical security testing, rogue device detection, or even social engineering ops where proximity matters.</p>
+<h4 id="key-features"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#key-features">Key Features</a></h4>
+<ul>
+<li><strong>Metric Sniffing</strong>: Pulls signal strength and noise using multiple Linux tools for reliability across setups.</li>
+<li><strong>Proximity Estimation</strong>: Maps SNR to proximity zones ("Very Close," "Normal Range," "Moving Away," "Far Away") or exact distances via ML.</li>
+<li><strong>Signal Smoothing</strong>: Uses exponential moving average (EMA) to stabilize noisy Wi-Fi signals.</li>
+<li><strong>Machine Learning</strong>: Collects data and trains regression (<code>LinearRegression</code>) or classification (<code>SVC</code>) models for custom environments.</li>
+<li><strong>Real-Time Monitoring</strong>: Low-latency updates for dynamic scenarios like tailgating detection.</li>
+<li><strong>Pentesting Applications</strong>: Think intrusion detection, physical access monitoring, or IoT exploitation.</li>
+</ul>
+<h3 id="technical-breakdown"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#technical-breakdown">Technical Breakdown</a></h3>
+<p>The system is built for hackers who love to tinker. It operates in four modes:</p>
+<ol>
+<li><strong>Monitoring Mode</strong>: Real-time tracking of Wi-Fi metrics with proximity estimates using static thresholds or a trained model.</li>
+<li><strong>Data Collection Mode</strong>: Logs signal data with ground-truth distances or labels for training custom models.</li>
+<li><strong>Model Training Mode</strong>: Builds a <code>scikit-learn</code> pipeline to predict distances or proximity zones.</li>
+<li><strong>Inference Mode</strong>: Deploys the trained model for live, environment-tuned proximity detection.</li>
+</ol>
+<h4 id="signal-processing"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#signal-processing">Signal Processing</a></h4>
+<p>The system scrapes Wi-Fi metrics using a tiered approach to handle diverse hardware:</p>
+<ul>
+<li><strong><code>iw dev &lt;interface&gt; link</code></strong>: Modern, clean way to get signal strength (dBm).</li>
+<li><strong><code>/proc/net/wireless</code></strong>: Kernel-level stats for signal and noise, great for older systems.</li>
+<li><strong><code>iwconfig</code></strong>: Fallback for legacy setups, parsing signal/noise from text output.</li>
+</ul>
+<p>SNR is calculated as:</p>
+<p>[ \text{SNR} = \text{Signal Strength (dBm)} - \text{Noise Level (dBm)} ]</p>
+<p>If noise is unavailable (common in some adapters), it approximates:</p>
+<p>[ \text{SNR} \approx \text{Signal Strength} + 90 ]</p>
+<p>To counter Wi-Fi's notorious signal jitter, an EMA smooths SNR with (\alpha = 0.7):</p>
+<p>[ \text{SNR}<em>{\text{smoothed}, t} = \alpha \cdot \text{SNR}</em>{\text{smoothed}, t-1} + (1 - \alpha) \cdot \text{SNR}_{\text{raw}, t} ]</p>
+<p>This keeps readings stable for reliable proximity estimates during pentests.</p>
+<h4 id="machine-learning-pipeline"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#machine-learning-pipeline">Machine Learning Pipeline</a></h4>
+<p>For hackers, the ML component is where things get juicy. The feature vector includes:</p>
+<ul>
+<li>Signal strength (dBm, default -100 if missing)</li>
+<li>Noise level (dBm, default -90 if missing)</li>
+<li>Smoothed SNR (dB, default 0 if missing)</li>
+</ul>
+<p>The system auto-detects label type:</p>
+<ul>
+<li><strong>Regression</strong> (<code>LinearRegression</code>): Predicts distance (cm), mapped to zones:</li>
+<li>&lt;50 cm: "VERY CLOSE"</li>
+<li>50–200 cm: "NORMAL RANGE"</li>
+<li>200–400 cm: "MOVING AWAY"</li>
+<li>
+<blockquote>
+<p>400 cm: "FAR AWAY"</p>
+</blockquote>
+</li>
+<li><strong>Classification</strong> (<code>SVC</code> with probability): Directly predicts proximity zones.</li>
+</ul>
+<p>A <code>StandardScaler</code> normalizes features to handle varying signal ranges. Models are serialized with <code>joblib</code> for quick deployment. Pentesters can train models in specific environments (e.g., target office) to account for walls, interference, or hardware quirks.</p>
+<h4 id="pentesting-applications"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#pentesting-applications">Pentesting Applications</a></h4>
+<ul>
+<li><strong>Physical Intrusion Detection</strong>: Detect tailgating or unauthorized access by monitoring SNR changes near doors or secure areas.</li>
+<li><strong>Rogue Device Tracking</strong>: Identify movement of Wi-Fi-enabled devices (e.g., laptops, phones) in restricted zones.</li>
+<li><strong>IoT Exploitation</strong>: Integrate with MQTT or Home Assistant to trigger payloads when someone approaches.</li>
+<li><strong>Social Engineering</strong>: Use proximity data to time physical access attempts or device interactions.</li>
+</ul>
+<h3 id="core-code"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#core-code">Core Code</a></h3>
+<p>Here’s a stripped-down version of the core logic, focusing on metric extraction and monitoring. The full code, with data collection and training, will be released soon.</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+import subprocess
+import re
+import time
+import joblib
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
 
-    
-      <nav class="md-post__action">
-        <a href="../../2025/12/07/snr-blog/">
-          Continue reading
-        </a>
-      </nav>
+INTERFACE = &quot;wlan0&quot;
+SAMPLING_RATE = 0.5
+SMOOTHING_FACTOR = 0.7
+MODEL_FILE = &quot;wifi_proximity_model.pkl&quot;
+
+def get_wireless_metrics(interface):
+    metrics = {'signal': None, 'noise': None}
+    try:
+        output = subprocess.check_output([&quot;iw&quot;, &quot;dev&quot;, interface, &quot;link&quot;], text=True, stderr=subprocess.DEVNULL)
+        sig_match = re.search(r&quot;signal:\s*(-?\d+)\s*dBm&quot;, output)
+        if sig_match:
+            metrics['signal'] = int(sig_match.group(1))
+    except Exception:
+        try:
+            with open(&quot;/proc/net/wireless&quot;, &quot;r&quot;) as f:
+                for line in f.readlines()[2:]:
+                    if interface in line:
+                        parts = line.strip().split()
+                        if len(parts) &gt;= 5:
+                            metrics['signal'] = int(float(parts[3]))
+                            metrics['noise'] = int(float(parts[4]))
+                            break
+        except Exception:
+            pass
+    return metrics
+
+def calculate_snr(metrics):
+    if metrics['signal'] is not None and metrics['noise'] is not None:
+        return metrics['signal'] - metrics['noise']
+    elif metrics['signal'] is not None:
+        return metrics['signal'] + 90
+    return None
+
+def monitor(interface, model=None):
+    smoothed_snr = None
+    print(f&quot;{'Time':&lt;8} | {'Signal':&gt;7} | {'SNR':&gt;6} | {'Status':&lt;25}&quot;)
+    print(&quot;-&quot; * 50)
+    try:
+        while True:
+            timestamp = time.strftime(&quot;%H:%M:%S&quot;)
+            metrics = get_wireless_metrics(interface)
+            snr = calculate_snr(metrics)
+            if snr is not None:
+                smoothed_snr = snr if smoothed_snr is None else SMOOTHING_FACTOR * smoothed_snr + (1 - SMOOTHING_FACTOR) * snr
+            signal_str = f&quot;{metrics['signal']} dBm&quot; if metrics['signal'] is not None else &quot;N/A&quot;
+            snr_str = f&quot;{smoothed_snr:.1f} dB&quot; if smoothed_snr is not None else &quot;N/A&quot;
+            status = &quot;NO SIGNAL&quot;
+            if snr is not None:
+                if model:
+                    features = [[metrics['signal'] or -100, metrics['noise'] or -90, smoothed_snr or 0]]
+                    pred = model.predict(features)[0]
+                    status = f&quot;{pred:.1f} cm&quot; if isinstance(pred, float) else pred
+                else:
+                    status = (&quot;VERY CLOSE&quot; if smoothed_snr &lt; 26 else
+                              &quot;NORMAL RANGE&quot; if smoothed_snr &lt; 33 else
+                              &quot;MOVING AWAY&quot; if smoothed_snr &lt; 40 else
+                              &quot;FAR AWAY&quot;)
+            print(f&quot;{timestamp:&lt;8} | {signal_str:&gt;7} | {snr_str:&gt;6} | {status:&lt;25}&quot;, end=&quot;\r&quot;)
+            time.sleep(SAMPLING_RATE)
+    except KeyboardInterrupt:
+        print(&quot;\nMonitoring stopped.&quot;)
+</code></pre>
+<p>This code is robust, with fallbacks for metric extraction and support for both static and ML-based detection. Hackers can extend it to log data to a remote server or trigger scripts on proximity events.</p>
+<h3 id="setup-and-usage"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#setup-and-usage">Setup and Usage</a></h3>
+<h4 id="requirements"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#requirements">Requirements</a></h4>
+<ul>
+<li><strong>OS</strong>: Linux (Kali, Ubuntu, etc.) with a Wi-Fi adapter (monitor mode not required but useful).</li>
+<li><strong>Software</strong>: Python 3.6+, <code>scikit-learn</code>, <code>joblib</code>, <code>numpy</code>.</li>
+<li><strong>Tools</strong>: <code>iw</code>, <code>iwconfig</code>, and read access to <code>/proc/net/wireless</code>.</li>
+</ul>
+<p>Install dependencies:</p>
+<pre><code class="language-bash">pip install scikit-learn joblib numpy
+</code></pre>
+<p>Check your Wi-Fi interface:</p>
+<pre><code class="language-bash">ip link show
+</code></pre>
+<h4 id="commands"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#commands">Commands</a></h4>
+<ol>
+<li>
+<p><strong>Monitor Mode</strong>:
+   <code>bash
+   python3 wifi_proximity.py --interface wlan0</code>
+   Uses <code>wifi_proximity_model.pkl</code> if present; falls back to static thresholds.</p>
+</li>
+<li>
+<p><strong>Data Collection Mode</strong>:
+   <code>bash
+   python3 wifi_proximity.py --collect --interface wlan0</code>
+   Input distances (cm) or labels (e.g., "VERY CLOSE"). Saves to <code>wifi_prox_data.csv</code>.</p>
+</li>
+<li>
+<p><strong>Model Training Mode</strong>:
+   <code>bash
+   python3 wifi_proximity.py --train</code>
+   Trains and saves the model to <code>wifi_proximity_model.pkl</code>.</p>
+</li>
+</ol>
+<h4 id="sample-output"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#sample-output">Sample Output</a></h4>
+<p>Monitoring output looks like:</p>
+<pre><code>Time     | Signal  | SNR    | Status
+------------------------------------------------
+12:34:56 | -50 dBm | 40.0 dB | FAR AWAY
+12:34:57 | -48 dBm | 42.0 dB | FAR AWAY
+</code></pre>
+<p>With an ML model, you might see distances (e.g., "150.2 cm") for regression.</p>
+<h3 id="hacking-tips-and-tricks"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#hacking-tips-and-tricks">Hacking Tips and Tricks</a></h3>
+<ul>
+<li><strong>Spoofing Defense</strong>: Wi-Fi signals can be manipulated (e.g., via signal amplifiers). Train models in the target environment to detect anomalies in SNR patterns.</li>
+<li><strong>Stealth Mode</strong>: Run in a Docker container or Raspberry Pi for covert deployment. Redirect output to a log file or C2 server with <code>tee</code> or <code>nc</code>.</li>
+<li><strong>Model Evasion</strong>: Test model robustness by introducing noise (e.g., using <code>aircrack-ng</code> to simulate interference). Retrain with adversarial data to harden the model.</li>
+<li><strong>Integration</strong>: Pipe proximity events to <code>metasploit</code> or <code>nmap</code> scripts for automated pentesting workflows.</li>
+<li><strong>Hardware Mods</strong>: Use high-gain antennas to extend range or directional antennas for precise tracking.</li>
+</ul>
+<h3 id="challenges-and-limitations"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#challenges-and-limitations">Challenges and Limitations</a></h3>
+<ul>
+<li><strong>Signal Noise</strong>: Multipath effects, walls, and interference can skew SNR. Train models with diverse data to compensate.</li>
+<li><strong>Hardware Variability</strong>: Some adapters don’t report noise, forcing reliance on the fallback SNR formula. Test on target hardware.</li>
+<li><strong>ML Dependence</strong>: Model accuracy hinges on training data quality. Collect data in realistic conditions (e.g., during a recon phase).</li>
+<li><strong>Latency</strong>: The 0.5s sampling rate may miss rapid movements. Tune <code>SAMPLING_RATE</code> for faster response at the cost of stability.</li>
+</ul>
+<h3 id="future-enhancements-for-pentesters"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#future-enhancements-for-pentesters">Future Enhancements for Pentesters</a></h3>
+<ul>
+<li><strong>Multi-Adapter Support</strong>: Combine multiple Wi-Fi interfaces for triangulation or redundancy.</li>
+<li><strong>Packet Injection</strong>: Integrate with <code>scapy</code> to correlate proximity with specific devices (MAC addresses).</li>
+<li><strong>C2 Integration</strong>: Stream data to a command-and-control server for remote monitoring.</li>
+<li><strong>ML Upgrades</strong>: Swap <code>LinearRegression</code>/<code>SVC</code> for XGBoost or neural nets for better accuracy.</li>
+<li><strong>Web Dashboard</strong>: Build a Flask-based UI for real-time visualization during engagements.</li>
+</ul>
+<h3 id="conclusion"><a class="toclink" href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#conclusion">Conclusion</a></h3>
+<p>This Wi-Fi Proximity Sensor is a hacker’s dream for physical security testing. It’s lightweight, customizable, and perfect for detecting movement, triggering payloads, or enhancing red team ops. Whether you’re sneaking through a facility or building a stealthy IoT trap, this tool delivers. The full code will hit <a href="../../2025/12/07/wi-fi-proximity-sensor-with-machine-learning-a-hackers-guide/#">GitHub</a> (link coming soon), so stay tuned. Grab a Wi-Fi adapter, fire up Kali, and start hacking proximity like a pro!</p>
     
   </div>
 </article>
