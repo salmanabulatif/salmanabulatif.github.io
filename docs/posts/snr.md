@@ -6,13 +6,11 @@ authors:
     - salmanabulatif
 ---
 
----
-date:
-  created: 2025-12-07
-readtime: 5
-authors:
-  - salmanabulatif
----
+# SNR Blog
+
+Welcome to the blog for the **Wi-Fi Proximity Sensor** project, where we transform a standard Wi-Fi adapter into a real-time proximity detector using machine learning.
+
+<!-- more -->
 
 # Wi-Fi Proximity Sensor with Machine Learning: A Hacker's Guide
 
