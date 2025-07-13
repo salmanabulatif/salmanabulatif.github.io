@@ -30,7 +30,7 @@ We consider a neural network with:
 Input Layer (x₁, x₂, x₃) → Hidden Layer (h₄, h₅) → Output Layer (o₆)
 ```
 
-
+![image3](image1.png)
 
 ---
 
@@ -210,3 +210,4 @@ Your files and these notes demonstrate a practical implementation of these princ
 **References:**  
 - [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/)
 - [CS231n: Convolutional Neural Networks for Visual Recognition (Stanford)](http://cs231n.github.io/neural-networks-2/)
+- [Example Back Propagation Algorithm Multi-Layer Perceptron Network](https://www.youtube.com/watch?v=n2L1J5JYgUk)
