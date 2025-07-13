@@ -3,6 +3,7 @@ name: Deploy MkDocs site to GitHub Pages
 on:
   push:
     branches:
+      - master
       - main  # Trigger on push to main branch
 
 permissions:
