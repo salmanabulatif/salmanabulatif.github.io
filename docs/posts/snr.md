@@ -211,7 +211,7 @@ Hackers can extend it to log data to a remote server or trigger scripts on proxi
 Install dependencies:
 
 ```bash
-pip install scikit-learn joblib numpy
+sudo apt install python3-{sklearn,joblib,numpy}
 ```
 
 Check your Wi-Fi interface:
