@@ -1,6 +1,6 @@
 site_name: Salman Abulatif
 site_description: Posting my findings ~salmanabulatif
-site_url: https://sitename.example
+site_url: https://salmanabulatif.github.io/
 theme:
   name: material
   palette:
