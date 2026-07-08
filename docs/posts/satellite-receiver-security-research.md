@@ -8,9 +8,7 @@ authors:
 
 # From Unboxing to Zero Day: Satellite Receiver Security Research
 
-When I first picked up a GX6607 based satellite receiver I had one question in mind. How secure is this thing? What followed was several months of hardware hacking, firmware analysis, and reverse engineering that ultimately led to the discovery of multiple zero day vulnerabilities affecting satellite receivers deployed across the Middle East and beyond. This write-up documents the full journey from opening the box to submitting a CVE.
-
-I presented this research at XCon Security Conference in Beijing and this post serves as the technical companion to that talk. My goal here is to walk through the methodology in enough detail that other researchers can apply the same techniques to similar embedded devices.
+When I first picked up a GX6607 based satellite receiver I had one question in mind. How secure is this thing? What followed was several months of hardware hacking, firmware analysis, and
 
 <!-- more -->
 
